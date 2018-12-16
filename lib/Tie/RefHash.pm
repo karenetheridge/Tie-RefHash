@@ -1,10 +1,6 @@
 package Tie::RefHash;
 
-use vars qw/$VERSION/;
-
-$VERSION = "1.40";
-
-use 5.005;
+our $VERSION = '1.40';
 
 =head1 NAME
 
@@ -66,11 +62,6 @@ L<Tie::RefHash> fully supports threading using the C<CLONE> method.
 L<Storable> hooks are provided for semantically correct serialization and
 cloning of tied refhashes.
 
-=head1 RELIC SUPPORT
-
-This version of Tie::RefHash seems to no longer work with 5.004. This has not
-been throughly investigated. Patches welcome ;-)
-
 =head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it under
@@ -93,8 +84,7 @@ perl(1), perlfunc(1), perltie(1)
 =cut
 
 use Tie::Hash;
-use vars '@ISA';
-@ISA = qw(Tie::Hash);
+our @ISA = qw(Tie::Hash);
 use strict;
 use Carp qw/croak/;
 
@@ -264,8 +254,7 @@ sub CLEAR {
 }
 
 package Tie::RefHash::Nestable;
-use vars '@ISA';
-@ISA = 'Tie::RefHash';
+our @ISA = 'Tie::RefHash';
 
 sub STORE {
   my($s, $k, $v) = @_;
