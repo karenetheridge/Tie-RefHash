@@ -1,10 +1,7 @@
 package Tie::RefHash;
+# ABSTRACT: Use references as hash keys
 
 our $VERSION = '1.40';
-
-=head1 NAME
-
-Tie::RefHash - use references as hash keys
 
 =head1 SYNOPSIS
 
@@ -62,20 +59,11 @@ L<Tie::RefHash> fully supports threading using the C<CLONE> method.
 L<Storable> hooks are provided for semantically correct serialization and
 cloning of tied refhashes.
 
-=head1 LICENSE
+=head1 AUTHORS
 
-This program is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself
+Gurusamy Sarathy <gsar@activestate.com>
 
-=head1 MAINTAINER
-
-Yuval Kogman E<lt>nothingmuch@woobling.orgE<gt>
-
-=head1 AUTHOR
-
-Gurusamy Sarathy        gsar@activestate.com
-
-'Nestable' by Ed Avis   ed@membled.com
+Tie::RefHash::Nestable by Ed Avis <ed@membled.com>
 
 =head1 SEE ALSO
 
