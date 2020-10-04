@@ -74,7 +74,7 @@ perl(1), perlfunc(1), perltie(1)
 use Tie::Hash;
 our @ISA = qw(Tie::Hash);
 use strict;
-use Carp qw/croak/;
+use Carp ();
 
 BEGIN {
   local $@;
@@ -92,7 +92,7 @@ BEGIN {
   local $@;
 
   if ( _HAS_SCALAR_UTIL ) {
-    Scalar::Util->import("refaddr");
+    *refaddr = sub { goto \&Scalar::Util::refaddr }
   } else {
     require overload;
 
@@ -147,7 +147,7 @@ sub STORABLE_freeze {
 
 sub STORABLE_thaw {
   my ( $self, $is_cloning, $version, $refs, $reg ) = @_;
-  croak "incompatible versions of Tie::RefHash between freeze and thaw"
+  Carp::croak "incompatible versions of Tie::RefHash between freeze and thaw"
     unless $version eq $storable_format_version;
 
   @$self = ( {}, $reg );
@@ -170,13 +170,13 @@ sub CLONE {
 sub _reindex_keys {
   my ( $self, $extra_keys ) = @_;
   # rehash all the ref keys based on their new StrVal
-  %{ $self->[0] } = map +(refaddr($_->[0]) => $_), (values(%{ $self->[0] }), @{ $extra_keys || [] });
+  %{ $self->[0] } = map +(Scalar::Util::refaddr($_->[0]) => $_), (values(%{ $self->[0] }), @{ $extra_keys || [] });
 }
 
 sub FETCH {
   my($s, $k) = @_;
   if (ref $k) {
-      my $kstr = refaddr($k);
+      my $kstr = Scalar::Util::refaddr($k);
       if (defined $s->[0]{$kstr}) {
         $s->[0]{$kstr}[1];
       }
@@ -192,7 +192,7 @@ sub FETCH {
 sub STORE {
   my($s, $k, $v) = @_;
   if (ref $k) {
-    $s->[0]{refaddr($k)} = [$k, $v];
+    $s->[0]{Scalar::Util::refaddr($k)} = [$k, $v];
   }
   else {
     $s->[1]{$k} = $v;
@@ -203,13 +203,13 @@ sub STORE {
 sub DELETE {
   my($s, $k) = @_;
   (ref $k)
-    ? (delete($s->[0]{refaddr($k)}) || [])->[1]
+    ? (delete($s->[0]{Scalar::Util::refaddr($k)}) || [])->[1]
     : delete($s->[1]{$k});
 }
 
 sub EXISTS {
   my($s, $k) = @_;
-  (ref $k) ? exists($s->[0]{refaddr($k)}) : exists($s->[1]{$k});
+  (ref $k) ? exists($s->[0]{Scalar::Util::refaddr($k)}) : exists($s->[1]{$k});
 }
 
 sub FIRSTKEY {
