@@ -241,7 +241,8 @@ sub CLEAR {
   %{$s->[1]} = ();
 }
 
-package Tie::RefHash::Nestable;
+package # hide from PAUSE
+  Tie::RefHash::Nestable;
 our @ISA = 'Tie::RefHash';
 
 sub STORE {
