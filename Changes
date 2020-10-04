@@ -2,6 +2,7 @@ Revision history for Tie-RefHash
 
 {{$NEXT}}
   - switch from "use vars" to "our", raising minimum perl to 5.6
+  - tooling improvements
 
 1.39      2011-02-25
   - Add LICENSE section to the documentation
