@@ -1,6 +1,6 @@
 Revision history for Tie-RefHash
 
-{{$NEXT}}
+1.40      2020-10-10 20:38:32Z
   - switch from "use vars" to "our", raising minimum perl to 5.6
   - tooling improvements
 
