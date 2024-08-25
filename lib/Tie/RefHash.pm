@@ -76,34 +76,16 @@ our @ISA = qw(Tie::Hash);
 use strict;
 use Carp ();
 
+# Tie::RefHash::Weak (until at least 0.09) assumes we define a refaddr()
+# function, so just import the one from Scalar::Util
+use Scalar::Util qw(refaddr);
+
 BEGIN {
-  local $@;
   # determine whether we need to take care of threads
   use Config ();
   my $usethreads = $Config::Config{usethreads}; # && exists $INC{"threads.pm"}
   *_HAS_THREADS = $usethreads ? sub () { 1 } : sub () { 0 };
-  *_HAS_SCALAR_UTIL = eval { require Scalar::Util; 1 } ? sub () { 1 } : sub () { 0 };
   *_HAS_WEAKEN = defined(&Scalar::Util::weaken) ? sub () { 1 } : sub () { 0 };
-}
-
-BEGIN {
-  # create a refaddr function
-
-  local $@;
-
-  if ( _HAS_SCALAR_UTIL ) {
-    *refaddr = sub { goto \&Scalar::Util::refaddr }
-  } else {
-    require overload;
-
-    *refaddr = sub {
-      if ( overload::StrVal($_[0]) =~ /\( 0x ([a-zA-Z0-9]+) \)$/x) {
-          return $1;
-      } else {
-        die "couldn't parse StrVal: " . overload::StrVal($_[0]);
-      }
-    };
-  }
 }
 
 my (@thread_object_registry, $count); # used by the CLONE method to rehash the keys after their refaddr changed
@@ -170,13 +152,13 @@ sub CLONE {
 sub _reindex_keys {
   my ( $self, $extra_keys ) = @_;
   # rehash all the ref keys based on their new StrVal
-  %{ $self->[0] } = map +(Scalar::Util::refaddr($_->[0]) => $_), (values(%{ $self->[0] }), @{ $extra_keys || [] });
+  %{ $self->[0] } = map +(refaddr($_->[0]) => $_), (values(%{ $self->[0] }), @{ $extra_keys || [] });
 }
 
 sub FETCH {
   my($s, $k) = @_;
   if (ref $k) {
-      my $kstr = Scalar::Util::refaddr($k);
+      my $kstr = refaddr($k);
       if (defined $s->[0]{$kstr}) {
         $s->[0]{$kstr}[1];
       }
@@ -192,7 +174,7 @@ sub FETCH {
 sub STORE {
   my($s, $k, $v) = @_;
   if (ref $k) {
-    $s->[0]{Scalar::Util::refaddr($k)} = [$k, $v];
+    $s->[0]{refaddr($k)} = [$k, $v];
   }
   else {
     $s->[1]{$k} = $v;
@@ -203,13 +185,13 @@ sub STORE {
 sub DELETE {
   my($s, $k) = @_;
   (ref $k)
-    ? (delete($s->[0]{Scalar::Util::refaddr($k)}) || [])->[1]
+    ? (delete($s->[0]{refaddr($k)}) || [])->[1]
     : delete($s->[1]{$k});
 }
 
 sub EXISTS {
   my($s, $k) = @_;
-  (ref $k) ? exists($s->[0]{Scalar::Util::refaddr($k)}) : exists($s->[1]{$k});
+  (ref $k) ? exists($s->[0]{refaddr($k)}) : exists($s->[1]{$k});
 }
 
 sub FIRSTKEY {
