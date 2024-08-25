@@ -109,6 +109,7 @@ sub TIEHASH {
       if ( ++$count > 1000 ) {
         # this ensures we don't fill up with a huge array dead weakrefs
         @thread_object_registry = grep defined, @thread_object_registry;
+        Scalar::Util::weaken( $_ ) for @thread_object_registry;
         $count = 0;
       }
     } else {
@@ -146,6 +147,7 @@ sub CLONE {
   # when the thread has been cloned all the objects need to be updated.
   # dead weakrefs are undefined, so we filter them out
   @thread_object_registry = grep defined && do { $_->_reindex_keys; 1 }, @thread_object_registry;
+  Scalar::Util::weaken( $_ ) for @thread_object_registry;
   $count = 0; # we just cleaned up
 }
 
