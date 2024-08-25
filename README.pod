@@ -8,7 +8,7 @@ Tie::RefHash - Use references as hash keys
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 SYNOPSIS
 
@@ -83,7 +83,7 @@ Tie::RefHash::Nestable by Ed Avis <ed@membled.com>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Yuval Kogman Karen Etheridge Florian Ragwitz Jerry D. Hedden
+=for stopwords Yuval Kogman Karen Etheridge Florian Ragwitz Lukas Mai Jerry D. Hedden tusooa
 
 =over 4
 
@@ -101,7 +101,15 @@ Florian Ragwitz <rafl@debian.org>
 
 =item *
 
+Lukas Mai <lukasmai.403@gmail.com>
+
+=item *
+
 Jerry D. Hedden <jdhedden@cpan.org>
+
+=item *
+
+tusooa <tusooa@kazv.moe>
 
 =back
 
