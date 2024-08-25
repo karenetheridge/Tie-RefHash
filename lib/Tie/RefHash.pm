@@ -1,7 +1,7 @@
 package Tie::RefHash;
 # ABSTRACT: Use references as hash keys
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 =head1 SYNOPSIS
 
