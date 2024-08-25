@@ -1,6 +1,9 @@
 Revision history for Tie-RefHash
 
 {{$NEXT}}
+  - fix leaks in @thread_object_registry (RT#64025, tusooa, #1 and Lukas Mai, #2)
+  - fix incompatibility with Scalar::Util 1.65 and remove old refaddr fallback
+    (Lukas Mai, #3)
 
 1.40      2020-10-10 20:38:32Z
   - switch from "use vars" to "our", raising minimum perl to 5.6
